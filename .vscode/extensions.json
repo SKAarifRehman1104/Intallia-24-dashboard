@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // Linting for JavaScript and TypeScript
+    "esbenp.prettier-vscode", // Code formatter
+    "msjsdiag.debugger-for-chrome", // Debugging for Chrome
+    "eamodio.gitlens", // Git integration
+    "streetsidesoftware.code-spell-checker", // Spell checker
+    "ms-vscode-remote.remote-ssh", // Remote development over SSH
+    "ms-vscode-remote.remote-wsl", // Remote development in WSL
+    "redhat.vscode-yaml", // YAML support
+    "visualstudioexptteam.vscodeintellicode", // AI-assisted code completions
+    "github.vscode-pull-request-github", // GitHub integration
+    "ms-vsliveshare.vsliveshare", // Live share for collaboration
+    "gruntfuggly.todo-tree", // Highlight TODO comments
+    "mhutchie.git-graph", // Visualize Git history
+    "yzhang.markdown-all-in-one", // Markdown support
+    "formulahendry.auto-rename-tag", // Auto rename paired HTML/XML tags
+    "dsznajder.es7-react-js-snippets", // React/Redux snippets
+    "xabikos.javascriptsnippets", // JavaScript snippets
+    "wix.vscode-import-cost" // Display import size
+  ]
+}

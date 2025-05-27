@@ -1,0 +1,167 @@
+/* ========== Colors ========== */
+:root {
+  /* Greys */
+  --grey-00: #e5e5ea;
+  --grey-01: #d1d1d6;
+  --grey-02: #aeaeb2;
+  --grey-03: #7c7c80;
+  --grey-04: #444446;
+  --black-primary: #242426;
+
+  /* Primary and Alert Colors */
+  --primary-blue: #04b8fc;
+  --alert-red: #ff3a3a;
+  --alert-yellow: #ffb323;
+  --alert-green: #23c168;
+
+  /* Basic Colors */
+  --white: #ffffff;
+  --light-grey: #f2f2f7;
+
+  /* Blue Palette */
+  --blue-50: #d5f2fa;
+  --blue-100: #ace5f5;
+  --blue-200: #82d8f0;
+  --blue-300: #58cbe9;
+  --blue-400: #2ebde6;
+  --blue-500: #12b0e6;
+  --blue-600: #0594bb;
+  --blue-700: #047396;
+  --blue-800: #023f70;
+  --blue-900: #011025;
+}
+
+/* ========== Typography ========== */
+:root {
+  --font-primary: "Plus Jakarta Sans", sans-serif;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Font Sizes and Line Heights */
+  --font-caption2-size: 10px;
+  --font-caption1-size: 12px;
+  --font-footnote-size: 13px;
+  --font-subheadline-size: 15px;
+  --font-callout-size: 16px;
+  --font-headline-size: 17px;
+  --font-title3-size: 20px;
+  --font-title2-size: 22px;
+  --font-title1-size: 28px;
+  --font-largeTitle-size: 34px;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.5;
+}
+
+/* ========== Example Classes (Optional) ========== */
+
+/* Text Styles */
+.text-caption2 {
+  font-family: var(--font-primary);
+  font-size: var(--font-caption2-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
+}
+
+.text-caption1 {
+  font-family: var(--font-primary);
+  font-size: var(--font-caption1-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
+}
+
+.text-footnote {
+  font-family: var(--font-primary);
+  font-size: var(--font-footnote-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
+}
+
+.text-subheadline {
+  font-family: var(--font-primary);
+  font-size: var(--font-subheadline-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+.text-callout {
+  font-family: var(--font-primary);
+  font-size: var(--font-callout-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+.text-headline {
+  font-family: var(--font-primary);
+  font-size: var(--font-headline-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+.text-title3 {
+  font-family: var(--font-primary);
+  font-size: var(--font-title3-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-relaxed);
+}
+
+.text-title2 {
+  font-family: var(--font-primary);
+  font-size: var(--font-title2-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-relaxed);
+}
+
+.text-title1 {
+  font-family: var(--font-primary);
+  font-size: var(--font-title1-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-relaxed);
+}
+.card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.inverted-radius {
+  --radius: 11px;
+  --size: 11px;
+  --offset-x: 38px;
+  --offset-y: 38px;
+  aspect-ratio: 1;
+  z-index: 1;
+  background: linear-gradient(to bottom, #fff, transparent);
+  border-radius: var(--radius);
+
+  /* Mask for inverted corners */
+  --_mask-main:
+    /calc(2 * var(--radius)) calc(2 * var(--radius))
+    radial-gradient(#000 70%, #0000 72%);
+  --_mask-corner:
+    conic-gradient(at calc(100% - var(--radius)) var(--radius), #0000 25%, #000 0);
+  --_distance: calc(var(--size) + var(--radius));
+  mask:
+    calc(100% - var(--_distance) - var(--offset-x)) 0 var(--_mask-main),
+    100% calc(var(--_distance) + var(--offset-y)) var(--_mask-main),
+    radial-gradient(var(--size) at 100% 0, #0000 99%, #000 calc(100% + 1px))
+      calc(-1 * var(--radius) - var(--offset-x)) calc(var(--radius) + var(--offset-y)),
+    var(--_mask-corner) calc(-1 * var(--_distance) - var(--offset-x)) 0,
+    var(--_mask-corner) 0 calc(var(--_distance) + var(--offset-y));
+  mask-repeat: no-repeat;
+
+  /* Visual border effect */
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.62);
+}
+
+
+article:hover .cfs,
+article:hover button {
+  background: linear-gradient(180deg, #0dafdc 0%, #22e9a2 100%);
+}
