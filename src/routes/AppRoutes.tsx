@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import Login from "@/pages/auth/Login/Login";
 import UserGroupDetails from "@/pages/RolesAndAccess/UserGroupDetails";
-
+import AddRole from "@/pages/RolesAndAccess/AddRole";
 import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
 import Signup from "@/pages/auth/SignUp/Signup";
@@ -70,13 +70,21 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/user-role-&-access/:UserGroupId",
+    path: "/add-role",
     element: (
       <PrivateRoute>
-        <UserGroupDetails />
+        <AddRole />
       </PrivateRoute>
     ),
   },
+  {
+        path: "/user-group-permissions/:UserGroupId",
+        element: (
+          <PrivateRoute>
+              <UserGroupDetails />
+          </PrivateRoute>
+        ),
+      },
 
   {
     path: "/user",

@@ -10,27 +10,25 @@ import { useQuery } from "@tanstack/react-query";
 
 const UserManagement = () => {
   const navigate = useNavigate();
-
+  const payload = {
+    ScreenName: "UserMaster",
+    LookUpKey: "GetList",
+    Filter1: "",
+    Filter2: "",
+    Filter3: "",
+    Filter4: "",
+    Filter5: "",
+  };
   const {
     data: users = [],
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["User"],
-    queryFn: async () =>
-      await getScreen({
-        ScreenName: "UserMaster",
-        LookUpKey: "GetList",
-        Filter1: "",
-        Filter2: "",
-        Filter3: "",
-        Filter4: "",
-        Filter5: "",
-      }),
+    queryFn: async () => await getScreen(payload),
     retry: 2,
   });
   console.log(users);
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");

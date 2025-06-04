@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Company } from "@/types/index";
-import ThreeDotMenu from "@/components/common/ActonModal";
+import ActionModal from "@/components/common/ActonModal";
 import { DataTable, Column } from "@/components/common/DataTable";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCompany } from "@/http/api";
+import { deleteCompany } from "@/http/api.js";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import React from "react";
 
 const tableColumns: Column<Company>[] = [
   {
@@ -40,8 +40,7 @@ const tableColumns: Column<Company>[] = [
     header: "Status",
     render: (company) => {
       const status = company.Status
-        ? company.Status.charAt(0).toUpperCase() +
-          company.Status.slice(1).toLowerCase()
+        ? company.Status.charAt(0).toUpperCase() + company.Status.slice(1).toLowerCase()
         : "";
       return (
         <Badge
@@ -78,20 +77,15 @@ interface CTableProps {
   companies: Company[];
 }
 
-export const CTable = ({ searchQuery, companies }: CTableProps) => {
+export const CTable = ({
+  searchQuery,
+  companies,
+}: CTableProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleEdit = (companyId: string | number) => {
-    if (!companyId) {
-      toast.error("CompanyId is undefined");
-      return;
-    }
-    navigate(`/add-company?companyId=${companyId}`);
-  };
-
   const deleteCompanyMutation = useMutation({
-    mutationFn: async (companyId: string | number) => {
+    mutationFn: async (companyId: string) => {
       const payload = {
         JSON: JSON.stringify({
           Header: [{ CompanyId: companyId }],
@@ -102,32 +96,8 @@ export const CTable = ({ searchQuery, companies }: CTableProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Company deleted successfully.");
-    },
-    onError: (error) => {
-      console.error("Delete failed:", error);
-      toast.error("Failed to delete company.");
     },
   });
-
-  const getRowActions = (company: Company) => {
-    if (!company || !company.CompanyId) return null;
-    return (
-      <ThreeDotMenu
-        actions={[
-          {
-            label: "Edit",
-            onClick: () => handleEdit(company.CompanyId),
-          },
-          {
-            label: "Delete",
-            onClick: () => deleteCompanyMutation.mutate(company.CompanyId),
-            className: "text-red-600 hover:bg-red-50",
-          },
-        ]}
-      />
-    );
-  };
 
   return (
     <DataTable
@@ -135,7 +105,16 @@ export const CTable = ({ searchQuery, companies }: CTableProps) => {
       columns={tableColumns}
       rowKey={(company) => company.CompanyId}
       selectable
-      actions={getRowActions}
+      actions={(company) =>
+        company && company.CompanyId ? (
+          <ActionModal
+            onEdit={() => navigate(`/add-company?companyId=${company.CompanyId}`)}
+            onDelete={() => deleteCompanyMutation.mutate(company.CompanyId)}
+            deleteLabel={deleteCompanyMutation.isPending ? "Deleting..." : "Delete"}
+            disabled={deleteCompanyMutation.isPending}
+          />
+        ) : null
+      }
     />
   );
 };

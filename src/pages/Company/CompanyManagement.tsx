@@ -17,47 +17,59 @@ const CompanyManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch companies
+
+  const payload = {
+    ScreenName: "CompanyMaster",
+    LookUpKey: "GetList",
+    Filter1: "",
+    Filter2: "",
+    Filter3: "",
+    Filter4: "",
+    Filter5: "",
+  }
+  // Use React Query for fetching companies
   const {
-    data: companies,
+    data: companies = [],
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["companies"],
     queryFn: async () =>
-      await getScreen({
-        ScreenName: "CompanyMaster",
-        LookUpKey: "GetList",
-        Filter1: "",
-        Filter2: "",
-        Filter3: "",
-        Filter4: "",
-        Filter5: "",
-      }),
+      await getScreen(payload),
     retry: 2,
   });
-
   // Filter companies by search query
-  const filteredCompanies = companies?.LookupData?.filter((company: Company) => {
-    const searchStr = searchQuery.toLowerCase();
-    return (
-      company.CompanyId?.toLowerCase().includes(searchStr) ||
-      company.CompanyName?.toLowerCase().includes(searchStr) ||
-      company.Email?.toLowerCase().includes(searchStr) ||
-      company.PhoneNumber?.toLowerCase().includes(searchStr)
-    );
-  }) || [];
-
+  const filteredCompanies = companies?.LookupData?.filter(
+    (company: Company) => {
+      const searchStr = searchQuery.toLowerCase();
+      return (
+        company.CompanyId?.toLowerCase().includes(searchStr) ||
+        company.CompanyName?.toLowerCase().includes(searchStr) ||
+        company.Email?.toLowerCase().includes(searchStr) ||
+        company.PhoneNumber?.toLowerCase().includes(searchStr)
+      );
+    },
+  );
   const rowPerPage = 8;
-  const totalPages = Math.ceil(filteredCompanies.length / rowPerPage);
+  const totalPages = Math.ceil(filteredCompanies?.length / rowPerPage);
   const startIndex = (currentPage - 1) * rowPerPage;
   const endIndex = startIndex + rowPerPage;
 
-  const displayedCompanies: Company[] = filteredCompanies.slice(startIndex, endIndex);
+  const displayedCompanies: Company[] = filteredCompanies?.slice(
+    startIndex,
+    endIndex,
+  );
+  // console.log(displayedCompanies);
+  // if (displayedCompanies && Array.isArray(displayedCompanies)) {
+  //   displayedCompanies.forEach(company => {
+  //     console.log(`CompanyId: ${company.CompanyId}, Status: ${company.Status}`);
+  //   });
+  // }
 
   const exportInExcel = () => {
+    // Define the columns you want in the Excel and their order
     const headers = [
-      "CompanyId",
+      "CompanyID",
       "CompanyName",
       "Email",
       "Phone Number",
@@ -65,8 +77,9 @@ const CompanyManagement = () => {
       "Website",
     ];
 
-    const data = filteredCompanies.map((company: Company) => ({
-      CompanyId: company.CompanyId ?? "",
+    // Prepare data rows
+    const data = (filteredCompanies || []).map((company: Company) => ({
+      CompanyID: company.CompanyId ?? "",
       CompanyName: company.CompanyName ?? "",
       Email: company.Email ?? "",
       "Phone Number": company.PhoneNumber ?? "",
@@ -74,16 +87,21 @@ const CompanyManagement = () => {
       Website: company.Website ?? "",
     }));
 
+    // Create worksheet and workbook
     const worksheet = XLSX.utils.json_to_sheet(data, { header: headers });
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Companies");
+
+    // Export to Excel file
     XLSX.writeFile(workbook, "companies.xlsx");
   };
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
+
+    // Define the columns you want in the PDF and their order
     const headers = [
-      "CompanyId",
+      "CompanyID",
       "CompanyName",
       "Email",
       "Phone Number",
@@ -91,7 +109,8 @@ const CompanyManagement = () => {
       "Website",
     ];
 
-    const body = filteredCompanies.map((company: Company) => [
+    // Map your data to match the header order
+    const body = (filteredCompanies || []).map((company: Company) => [
       company.CompanyId ?? "",
       company.CompanyName ?? "",
       company.Email ?? "",
@@ -104,6 +123,7 @@ const CompanyManagement = () => {
       head: [headers],
       body,
       styles: { fontSize: 10 },
+      //theme: "grid",
       headStyles: { fillColor: [13, 175, 220] },
     });
 
@@ -113,8 +133,8 @@ const CompanyManagement = () => {
   return (
     <MainLayout>
       <div className="flex p-8 min-h-screen bg-background">
-        <main className="flex-1">
-          <div className="space-y-6">
+        <main className="flex-1 ">
+          <div className="space-y-6 ">
             <div className="flex justify-between items-center">
               <h1 className="page-heading">User Management (Company)</h1>
             </div>

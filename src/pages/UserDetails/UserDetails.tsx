@@ -9,29 +9,28 @@ import { CustomButton } from "@/components/login/CustomButton";
 import skipIcon from "@/assets/skip.svg";
 import nextIcon from "@/assets/next.svg";
 import { getScreen } from "@/http/api.js";
-import {useQuery} from "@tanstack/react-query";
-
+import { useQuery } from "@tanstack/react-query";
 
 const UserDetails: React.FC = () => {
-    const {
-      data: usereducation = [],
-      isLoading,
-      isError,
-    } = useQuery({
-      queryKey: ["UserEduction"],
-      queryFn: async () =>
-        await getScreen({
-          ScreenName: "UserEduction",
-          LookUpKey: "GetUserEduction",
-          Filter1: "",
-          Filter2: "",
-          Filter3: "",
-          Filter4: "",
-          Filter5: "",
-        }),
-      retry: 2,
-    });
-    console.log(usereducation);
+  const payload = {
+    ScreenName: "UserEduction",
+    LookUpKey: "GetUserEduction",
+    Filter1: "",
+    Filter2: "",
+    Filter3: "",
+    Filter4: "",
+    Filter5: "",
+  };
+  const {
+    data: usereducation = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["UserEduction"],
+    queryFn: async () => await getScreen(payload),
+    retry: 2,
+  });
+  console.log(usereducation);
 
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
@@ -91,7 +90,6 @@ const UserDetails: React.FC = () => {
                     </CustomButton>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

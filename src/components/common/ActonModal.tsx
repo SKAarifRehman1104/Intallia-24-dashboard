@@ -1,18 +1,21 @@
+// ActonModal.tsx
 import React, { useState, useRef, useEffect } from "react";
 
-export interface ActionMenuAction {
-  label: string;
-  onClick: () => void;
-  className?: string;
+interface ActionModalProps {
+  onEdit?: () => void;
+  onDelete?: () => void;
+  editLabel?: string;
+  deleteLabel?: string;
   disabled?: boolean;
 }
 
-interface ActionMenuProps {
-  actions: ActionMenuAction[];
-  icon?: React.ReactNode;
-}
-
-const ActionMenu: React.FC<ActionMenuProps> = ({ actions, icon }) => {
+const ActionModal: React.FC<ActionModalProps> = ({
+  onEdit,
+  onDelete,
+  editLabel = "Edit",
+  deleteLabel = "Delete",
+  disabled = false,
+}) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -35,26 +38,38 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ actions, icon }) => {
         aria-haspopup="true"
         aria-expanded={open}
       >
-        {icon || "⋮"}
+        ⋮
       </button>
 
       {open && (
         <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md border border-gray-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {actions.map((action, idx) => (
+            {onEdit && (
               <button
-                key={action.label + idx}
                 type="button"
                 onClick={() => {
-                  action.onClick();
                   setOpen(false);
+                  onEdit();
                 }}
-                className={`w-full text-left px-4 py-2 text-sm ${action.className || "text-gray-700 hover:bg-gray-100"}`}
-                disabled={action.disabled}
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                disabled={disabled}
               >
-                {action.label}
+                {editLabel}
               </button>
-            ))}
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  onDelete();
+                }}
+                className="text-red-500 hover:underline px-4 py-2 text-sm w-full text-left"
+                disabled={disabled}
+              >
+                {deleteLabel}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -62,4 +77,4 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ actions, icon }) => {
   );
 };
 
-export default ActionMenu;
+export default ActionModal;

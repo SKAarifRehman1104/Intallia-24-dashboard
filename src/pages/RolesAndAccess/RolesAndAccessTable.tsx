@@ -1,8 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import ThreeDotMenu from "@/components/common/ActonModal";
+import ActionModal from "@/components/common/ActonModal";
 import { DataTable, Column } from "@/components/common/DataTable";
 import { Roles } from "@/types";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteUserGroup } from "@/http/api.js";
 
 const RolesAndAccessTable = ({
   startIndex,
@@ -16,7 +19,26 @@ const RolesAndAccessTable = ({
   users?: Roles[];
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const isUserRoleAccessRoute = location.pathname === "/user-role-&-access";
+
+  // React Query mutation for deleting a user group
+  const deleteUserGroupMutation = useMutation({
+    mutationFn: async ({ UserGroupId, CompanyId }: { UserGroupId: string; CompanyId: string }) => {
+      const payload = {
+        JSON: JSON.stringify({
+          Header: [{ UserGroupId, CompanyId }],
+          Response: [{ ResponseText: "", ErrorCode: "" }],
+        }),
+      };
+      return await deleteUserGroup(payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userGroups"] });
+      window.location.reload();
+    },
+  });
 
   const userColumns: Column<Roles>[] = [
     {
@@ -24,7 +46,7 @@ const RolesAndAccessTable = ({
       header: "User Group ID",
       render: (user) =>
         isUserRoleAccessRoute ? (
-          <Link to={`/user-role-&-access/${user.UserGroupId}`} className="text-blue-600 hover:underline">
+          <Link to={`/user-group-permissions/${user.UserGroupId}`} className="text-blue-600 hover:underline">
             {user.UserGroupId}
           </Link>
         ) : (
@@ -41,7 +63,20 @@ const RolesAndAccessTable = ({
       columns={userColumns}
       rowKey={(user) => user.UserGroupId}
       selectable
-      actions={() => <ThreeDotMenu company={undefined} />}
+      actions={(user) => (
+        <ActionModal
+          onEdit={() => navigate(`/user-group-permissions/${user.UserGroupId}`)}
+          onDelete={() =>
+            deleteUserGroupMutation.mutate({
+              UserGroupId: user.UserGroupId,
+              CompanyId: user.CompanyId,
+            })
+          }
+          editLabel="Edit"
+          deleteLabel={deleteUserGroupMutation.isPending ? "Deleting..." : "Delete"}
+          disabled={deleteUserGroupMutation.isPending}
+        />
+      )}
     />
   );
 };

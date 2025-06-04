@@ -6,7 +6,46 @@ export const login = (payload) => api.post("/Login", payload);
 export const logOut = (payload) => api.post("/LogOut", payload);
 
 //Screens
-export const getScreen = (payload) => api.post("/GETLookupData", payload);
+export const getScreen = async (payload) => {
+  const response = await api.post("/GETLookupData",
+    payload,
+  );
+  return await response.data;
+};
+
+// Screen permissions
+export const getUserGroupScreens = async (payload) => {
+  const res = await api.post("/GetScreenGroup", payload);
+  return res.data;
+};
+
+
+
+export const getUserGroup = async (payload) => {
+  const response = await api.post("/GetUserGroup", payload);
+  return response.data;
+};
+
+export const updateUserGroupScreens = async (payload) => {
+  const response = await api.post("/UpdateUserGroup", payload);
+  console.log("Response from updateUserGroupScreens:", response.data);
+  return response.data;
+};
+
+// Add User Group
+export const createUserGroupScreens = async (payload) => {
+  const response = await api.post("/AddUserGroup", payload);
+  return response.data;
+};
+
+//Delete User Group
+export const deleteUserGroup = async (payload) => {
+  console.log("Payload for deleteUserGroup:", payload);
+  const response = await api.post("/DeleteUserGroup", payload);
+  console.log("Response from deleteUserGroup:", response.data);
+  return response.data;
+
+};
 
 // Company API
 export const getCompanyById = (payload) => api.post("/GetCompany", payload);
