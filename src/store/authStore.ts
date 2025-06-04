@@ -31,7 +31,7 @@ export const useAuthStore = create<State & Actions>((set) => ({
     console.log("Login response:", res);
 
     // Extract values from the actual response
-    const user = res.data.UserValid[0];
+    const user = resr.UserValid[0];
 
     const token = user.Token;
     const userID = user.UserId;

@@ -10,32 +10,32 @@ export const getScreen = async (payload) => {
   const response = await api.post("/GETLookupData",
     payload,
   );
-  return await response.data;
+  return await response;
 };
 
 // Screen permissions
 export const getUserGroupScreens = async (payload) => {
   const res = await api.post("/GetScreenGroup", payload);
-  return res.data;
+  return res;
 };
 
 
 
 export const getUserGroup = async (payload) => {
   const response = await api.post("/GetUserGroup", payload);
-  return response.data;
+  return response;
 };
 
 export const updateUserGroupScreens = async (payload) => {
   const response = await api.post("/UpdateUserGroup", payload);
   console.log("Response from updateUserGroupScreens:", response.data);
-  return response.data;
+  return response;
 };
 
 // Add User Group
 export const createUserGroupScreens = async (payload) => {
   const response = await api.post("/AddUserGroup", payload);
-  return response.data;
+  return response;
 };
 
 //Delete User Group
@@ -43,7 +43,7 @@ export const deleteUserGroup = async (payload) => {
   console.log("Payload for deleteUserGroup:", payload);
   const response = await api.post("/DeleteUserGroup", payload);
   console.log("Response from deleteUserGroup:", response.data);
-  return response.data;
+  return response;
 
 };
 
